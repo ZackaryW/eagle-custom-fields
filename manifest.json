@@ -1,6 +1,6 @@
 {
-    "id": "eagle-custom-fields",
-    "version": "1.0.1",
+    "id": "b2946dc8-caf3-11ef-9cd2-0242ac120002",
+    "version": "1.0.2",
     "platform": "all",
     "arch": "all",
     "name": "{{manifest.app.name}}",
