@@ -1,0 +1,11 @@
+{
+	"manifest": {
+		"app": {
+			"name": "Eagle カスタムフィールド"
+		}
+	},
+	"app": {
+		"title": "Eagle カスタムフィールド",
+		"no_selection": "少なくとも1つのアイテムを選択してください。"
+	}
+}

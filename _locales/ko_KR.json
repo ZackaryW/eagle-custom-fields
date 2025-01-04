@@ -1,0 +1,11 @@
+{
+	"manifest": {
+		"app": {
+			"name": "Eagle 커스텀 필드"
+		}
+	},
+	"app": {
+		"title": "Eagle 커스텀 필드",
+		"no_selection": "최소 하나의 아이템을 선택해주세요."
+	}
+}

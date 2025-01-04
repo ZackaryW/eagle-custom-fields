@@ -1,0 +1,11 @@
+{
+	"manifest": {
+		"app": {
+			"name": "Eagle Campos personalizados"
+		}
+	},
+	"app": {
+		"title": "Eagle Custom Fields",
+		"no_selection": "Por favor seleccione al menos un elemento."
+	}
+}

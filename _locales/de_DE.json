@@ -1,0 +1,11 @@
+{
+	"manifest": {
+		"app": {
+			"name": "Eagle Felder"
+		}
+	},
+	"app": {
+		"title": "Eagle Felder",
+		"no_selection": "Bitte wählen Sie mindestens ein Element aus."
+	}
+}

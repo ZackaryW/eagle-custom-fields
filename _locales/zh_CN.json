@@ -1,0 +1,11 @@
+{
+	"manifest": {
+		"app": {
+			"name": "Eagle 自定义属性"
+		}
+	},
+	"app": {
+		"title": "Eagle 自定义属性",
+		"no_selection": "请至少选择一个项目。"
+	}
+}
