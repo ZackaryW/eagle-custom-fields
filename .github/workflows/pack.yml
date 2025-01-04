@@ -25,13 +25,34 @@ jobs:
     - name: Install zip
       run: sudo apt-get install zip
 
+    - name: Cache manifest name
+      id: cache-manifest
+      uses: actions/cache@v3
+      with:
+        path: .manifest-cache
+        key: ${{ runner.os }}-manifest
+
     - name: Read manifest.json
       id: read_manifest
       run: |
-        manifest_name=$(jq -r '.name' manifest.json)
+        if [ -f ".manifest-cache/manifest_name" ]; then
+          manifest_name=$(cat .manifest-cache/manifest_name)
+          echo "Using cached manifest name"
+        else
+          mkdir -p .manifest-cache
+          raw_name=$(jq -r '.name' manifest.json)
+          if [[ "$raw_name" == *"{{"* ]]; then
+            manifest_name=$(jq -r '."manifest/app/name"' _locales/en.json)
+            echo "Using localized name from _locales/en.json"
+          else
+            manifest_name=$raw_name
+          fi
+          echo "$manifest_name" > .manifest-cache/manifest_name
+        fi
         manifest_version=$(jq -r '.version' manifest.json)
         echo "MANIFEST_NAME=$manifest_name" >> $GITHUB_ENV
         echo "MANIFEST_VERSION=$manifest_version" >> $GITHUB_ENV
+        echo "manifest_name=$manifest_name" >> $GITHUB_OUTPUT
 
     - name: Check if release exists
       id: check_release
