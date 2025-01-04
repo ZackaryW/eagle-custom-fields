@@ -10,7 +10,5 @@ clone the repository and goto Eagle > Plugin > Import Local Project, then select
 
 After installing the plugin, you can create a new window by clicking on the plugin icon in the Eagle toolbar.
 
-You can based this plugin to create more complex plugins.
-
 ## License
 [MIT](https://choosealicense.com/licenses/mit/) ogdesign.inc

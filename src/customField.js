@@ -69,6 +69,22 @@ class CustomFieldManager {
         input.type = 'text';
         input.className = 'field-name-input';
         input.placeholder = 'Enter field name';
+        
+        // Add datalist for autocomplete
+        const datalist = document.createElement('datalist');
+        const datalistId = `field-suggestions-${this.fieldCounter}`;
+        datalist.id = datalistId;
+        
+        // Get existing entries from db and populate datalist
+        const entries = db.get('entries') || [];
+        entries.forEach(entry => {
+            const option = document.createElement('option');
+            option.value = entry;
+            datalist.appendChild(option);
+        });
+        
+        input.setAttribute('list', datalistId);
+        inputContainer.appendChild(datalist);
 
         // Handle tab key on new field input
         input.addEventListener('keydown', (e) => {
@@ -191,6 +207,9 @@ class CustomFieldManager {
             setTimeout(() => input.classList.remove('error'), 500);
             return null;
         }
+
+        // Add the field name to db entries
+        db.append('entries', fieldName);
 
         const newField = this.createField(fieldName);
         inputContainer.parentNode.insertBefore(newField, inputContainer);
