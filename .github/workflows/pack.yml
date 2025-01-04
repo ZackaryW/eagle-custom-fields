@@ -30,7 +30,7 @@ jobs:
       run: |
         raw_name=$(jq -r '.name' manifest.json)
         if [[ "$raw_name" == *"{{"* ]]; then
-          manifest_name=$(jq -r '."manifest/app/name"' _locales/en.json)
+          manifest_name=$(jq -r '.manifest.app.name' _locales/en.json)
           echo "Using localized name from _locales/en.json"
         else
           manifest_name=$raw_name
