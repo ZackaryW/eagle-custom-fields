@@ -28,8 +28,19 @@ jobs:
     - name: Read manifest.json
       id: read_manifest
       run: |
-        manifest_name=$(jq -r '.name' manifest.json)
+        # First check if name contains localization markers
+        raw_name=$(jq -r '.name' manifest.json)
+        if [[ "$raw_name" == *"{{"* ]]; then
+          # If name is localized, get it from _locales/en.json
+          manifest_name=$(jq -r '.manifest.app.name' _locales/en.json)
+          echo "Using localized name from _locales/en.json"
+        else
+          # Otherwise use the raw name from manifest.json
+          manifest_name=$raw_name
+        fi
+        # Get version as before
         manifest_version=$(jq -r '.version' manifest.json)
+        # Set environment variables
         echo "MANIFEST_NAME=$manifest_name" >> $GITHUB_ENV
         echo "MANIFEST_VERSION=$manifest_version" >> $GITHUB_ENV
 
