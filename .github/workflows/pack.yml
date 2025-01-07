@@ -59,6 +59,11 @@ jobs:
         cp manifest.json manifest.prod.json
         jq '.devTools = false' manifest.prod.json > manifest.temp.json && mv manifest.temp.json manifest.prod.json
 
+    - name: Create Debug manifest
+      run: |
+        cp manifest.json manifest.debug.json
+        jq '.devTools = true' manifest.debug.json > manifest.temp.json && mv manifest.temp.json manifest.debug.json
+
     - name: Zip files
       run: |
         # Production zip
@@ -70,7 +75,10 @@ jobs:
 
         # Debug zip
         zip -r "${{ env.MANIFEST_NAME }}-debug.eagleplugin" * \
-            -x ".*" -x ".*/**" -x "docs/*" -x "docs-asset/*" -x "*.eagleplugin"
+            -x ".*" -x ".*/**" -x "docs/*" -x "docs-asset/*" -x "manifest.json" \
+            -x "manifest.prod.json" -x "*.eagleplugin"
+        mv manifest.debug.json manifest.json
+        zip -u "${{ env.MANIFEST_NAME }}-debug.eagleplugin" manifest.json
 
     - name: Create Release
       id: create_release
