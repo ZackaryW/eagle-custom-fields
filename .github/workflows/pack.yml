@@ -28,18 +28,10 @@ jobs:
     - name: Read manifest.json
       id: read_manifest
       run: |
-        raw_name=$(jq -r '.name' manifest.json)
-        if [[ "$raw_name" == *"{{"* ]]; then
-          manifest_name=$(jq -r '.manifest.app.name' _locales/en.json)
-          echo "Using localized name from _locales/en.json"
-        else
-          manifest_name=$raw_name
-        fi
+        manifest_name=$(jq -r '.name' manifest.json)
         manifest_version=$(jq -r '.version' manifest.json)
         echo "MANIFEST_NAME=$manifest_name" >> $GITHUB_ENV
         echo "MANIFEST_VERSION=$manifest_version" >> $GITHUB_ENV
-        echo "manifest_name=$manifest_name" >> $GITHUB_OUTPUT
-        echo "Manifest name is ${{ env.MANIFEST_NAME }}"
 
     - name: Check if release exists
       id: check_release
@@ -51,9 +43,23 @@ jobs:
           exit 0
         fi
 
+    - name: Create Production manifest
+      run: |
+        cp manifest.json manifest.prod.json
+        jq '.devTools = false' manifest.prod.json > manifest.temp.json && mv manifest.temp.json manifest.prod.json
+
     - name: Zip files
       run: |
-        zip -r "${{ env.MANIFEST_NAME }}.eagleplugin" * -x ".*" -x ".*/**"
+        # Production zip
+        zip -r "${{ env.MANIFEST_NAME }}.eagleplugin" * \
+            -x ".*" -x ".*/**" -x "docs/*" -x "docs-asset/*" -x "manifest.json" \
+            -x "manifest.debug.json" -x "*.eagleplugin"
+        mv manifest.prod.json manifest.json
+        zip -u "${{ env.MANIFEST_NAME }}.eagleplugin" manifest.json
+
+        # Debug zip
+        zip -r "${{ env.MANIFEST_NAME }}-debug.eagleplugin" * \
+            -x ".*" -x ".*/**" -x "docs/*" -x "docs-asset/*" -x "*.eagleplugin"
 
     - name: Create Release
       id: create_release
@@ -66,7 +72,7 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
+    - name: Upload Production Release Asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,4 +80,14 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./${{ env.MANIFEST_NAME }}.eagleplugin
         asset_name: ${{ env.MANIFEST_NAME }}.eagleplugin
+        asset_content_type: application/zip
+
+    - name: Upload Debug Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ env.MANIFEST_NAME }}-debug.eagleplugin
+        asset_name: ${{ env.MANIFEST_NAME }}-debug.eagleplugin
         asset_content_type: application/zip
