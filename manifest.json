@@ -5,7 +5,7 @@
     "arch": "all",
     "name": "{{manifest.app.name}}",
     "logo": "/logo.png",
-    "keywords": [],
+    "keywords": ["custom fields"],
     "devTools": true,
 	"fallbackLanguage": "en",
 	"languages": ["en", "zh_TW", "zh_CN", "ja_JP", "es_ES", "ru_RU", "de_DE", "ko_KR"],
