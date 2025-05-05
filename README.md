@@ -1,3 +1,5 @@
+> this is reimplemented at https://github.com/eagle-cooler/power-eagle
+
 # Eagle Custom Fields
 
 This is a plugin for the [Eagle](https://en.eagle.cool/) that allows you to add custom fields to your items.
